@@ -83,13 +83,13 @@ and returns the price formatted as a string. formatPrice(10) => '$10.00'
 //! 💡 Scope
 
 function scopey() {
-    //! Define four local/functional variables (available anywhere within the function FROM THIS LINE UNDER ⚠️)
+    //! Define three local/functional variables (available anywhere within the function FROM THIS LINE UNDER ⚠️)
     var a = "first Value";
     let b = "first Value";
     const c = "first Value";
   
     if (true) {
-    //! Define four block-scoped variables (only available within the block)
+    //! Define three block-scoped variables (only available within the block)
       var a = "second Value";
       let b = "second Value";
       const c = "second Value";
