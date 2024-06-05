@@ -4,7 +4,7 @@ console.log(bookStore);
 //* Code from previous lecture
 
 function formatPrice(price) {
-  return '$' + Number.parseFloat(price).toFixed(2);
+  return '$' + parseFloat(price).toFixed(2);
 }
 
 //* New code starts here
