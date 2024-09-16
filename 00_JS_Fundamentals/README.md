@@ -19,7 +19,7 @@
 - Console.log
 ```js
 // A method outputs a message to the web console
-console.log('welcome to phase-1 JavaScript);
+console.log('welcome to phase-1 JavaScript');
 ```
 - Debugger 
 ```js
