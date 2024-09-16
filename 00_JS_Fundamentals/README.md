@@ -1,5 +1,7 @@
 # JS Fundamentals Pt. 1
 
+
+
 ## SWBAT
 - Use comments appropriately
 - Use console.log, debugger, and node to test and debug JavaScript

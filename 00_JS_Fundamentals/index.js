@@ -22,10 +22,8 @@
 //TODO Data Types
 
 //TODO Truthiness and Falseness
-//? Falsey
-
-
-//? Truthy
+//! Falsey
+//! Truthy
 
 
 //TODO String Interpolation
