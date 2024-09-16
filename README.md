@@ -9,6 +9,7 @@
 
 | Lecture                          	| Notes 	| Videos 	| Starter 	| Solution 	|
 |----------------------------------	|:-----:	|--------	|---------	|----------	|
+| Fundamentals                	    |       	|        	|         	|          	|
 | Functions & Scope                	|       	|        	|         	|          	|
 | DOM Manipulation                 	|       	|        	|         	|          	|
 | DOM Events                       	|       	|        	|         	|          	|
