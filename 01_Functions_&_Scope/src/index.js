@@ -113,6 +113,7 @@ function scopey() {
 
 // ✅ Create an array of strings from the inventory in the following format:
 // 'Eloquent JavaScript: A Modern Introduction to Programming by Marjin Haverbeke is on sale for $10.00'
-
-// ✅ Find all the books with price over $25.00 
 //! 💡 When do I use forEach vs map?
+
+// ✅ Find all the books with price over $25.00
+//! 💡 When do I use filter vs find?
