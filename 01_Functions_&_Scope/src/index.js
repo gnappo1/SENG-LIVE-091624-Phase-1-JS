@@ -142,7 +142,7 @@ function log(fn, name) {
 //   console.log(inventory[i].title)
 // }
 
-//! HIGHER ORDER ITERATORS
+//! HIGHER ORDER ITERATORS  
 // forEach is an outer function that receives an inner function -> Higher Order Function
 // bookObj => console.log(bookObj.title) IS THE anonymous arrow callback function
 // inventory.forEach(bookObj => console.log(bookObj.title))
