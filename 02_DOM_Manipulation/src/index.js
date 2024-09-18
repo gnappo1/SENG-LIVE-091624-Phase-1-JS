@@ -11,13 +11,38 @@ function formatPrice(price) {
 
 //* Concepts
 //! DOM Targeting
+
+//! Single Element
 //* querySelector => 
 //* getElementById =>
+//! Multiple elements
+//* querySelectorAll => 
+//* getElementByClassName =>
+//* getElementByTagName =>
 
 //! Node Properties
 //* innerText => 
 //* textContent =>
 //* innerHTML =>
+//* className =>
+//* classList =>
+//* id => 
+
+//! Node Relationship Properties
+//* children
+//* lastChild
+//* firstChild
+//* parentNode / parentElement
+//* previousSibling / previousElementSibling
+//* nextSibling / nextElementSibling
+
+//! Create Retrieve Update Destroy (CRUD) Methods
+//* createElement('tag')
+//* prepend(elements)
+//* append(elements)
+//* appendChild(newElement)
+//* removeChild(childElement)
+//* insetAdjacentElement(position, newElement)
 
 // TODO CRUD
 
