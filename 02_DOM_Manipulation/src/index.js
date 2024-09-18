@@ -53,16 +53,24 @@ function formatPrice(price) {
 //! Globals
 const storeHeader = document.querySelector("#store-name") //! captures the Node and never forgets about it
 // const storeHeader = () => document.querySelector("#store-name") //! tries to target the Node at the time of invocation
-
+const footerName = document.querySelector("#name")
+const footerNumber = document.querySelector("#number")
+const footerAddress = document.querySelector("#address")
+const booksUl = document.querySelector("#book-list")
 // TODO 💡 Create a new DOM element of your choice and add it to the page
 
 // TODO 💡 Create a function that sets the text content of the header to the bookstore name.
 function setStoreName(){
   storeHeader.innerText = bookStore.name
 }
+setStoreName();
 
-setStoreName()
 // TODO 💡 Create a function that grabs all the divs from the footer and render the bookstore name, address, and hours
+(function setFooterDetails() {
+  footerName.innerText = bookStore.name
+  footerNumber.innerText = bookStore.number
+  footerAddress.innerText = bookStore.address
+})()
 
 // TODO 💡 Remove an element of your choice from the DOM
 // storeHeader.remove()
@@ -72,3 +80,41 @@ setStoreName()
 // it will take a book object as an argument
 // and create the html structure for rendering 
 // that book and insert it into our webpage!
+
+function renderBook(bookObj) {
+  const li = document.createElement("li")
+  li.className = "list-li"
+  // li.setAttribute("class", "list-li")
+  const h3 = document.createElement("h3")
+  h3.innerText = bookObj.title
+
+  const pAuthor = document.createElement("p")
+  pAuthor.innerText = bookObj.author
+
+  const pPrice = document.createElement("p")
+  pPrice.innerText = formatPrice(bookObj.price)
+  
+  const img = document.createElement("img")
+  img.src = bookObj.imageUrl
+  img.alt = bookObj.title
+  
+  const btn = document.createElement("button")
+  btn.innerText = "Delete"
+
+  li.append(h3, pAuthor, pPrice, img, btn)
+  booksUl.appendChild(li)
+}
+
+function renderBookAsHTML(bookObj) {
+  booksUl.innerHTML += `
+    <li class="list-li">
+      <h3>${bookObj.title}</h3>
+      <p>${bookObj.author}</p>
+      <p>${formatPrice(bookObj.price)}</p>
+      <img src=${bookObj.imageUrl} alt=${bookObj.title}/>
+      <button>Delete</button>
+    </li>
+  `
+}
+// bookStore.inventory.forEach(bookObj => renderBook(bookObj))
+bookStore.inventory.forEach(renderBookAsHTML)
