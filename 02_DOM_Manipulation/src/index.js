@@ -10,9 +10,11 @@ function formatPrice(price) {
 //* New code starts here
 
 //* Concepts
-
+//! DOM Targeting
 //* querySelector => 
 //* getElementById =>
+
+//! Node Properties
 //* innerText => 
 //* textContent =>
 //* innerHTML =>
