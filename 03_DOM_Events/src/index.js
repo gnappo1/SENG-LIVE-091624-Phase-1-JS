@@ -68,13 +68,14 @@ function renderBookAsHTML(book) {
             <button data-id=${book.id} class="delete-btn">Delete</button>
         </li>
     `
-    const deleteBtn = document.querySelector(`button[data-id='${book.id}']`)
-    deleteBtn.addEventListener("click", (e) => e.target.parentElement.remove())
+    // const deleteBtn = document.querySelector(`button[data-id='${book.id}']`)
+    // deleteBtn.addEventListener("click", (e) => e.target.parentElement.remove())
 }
+
 
 setHeader()
 changeFooter()
-bookStore.inventory.forEach(bookObj => renderBook(bookObj))
+bookStore.inventory.forEach(bookObj => renderBookAsHTML(bookObj))
 // bookStore.inventory.forEach(renderBook) this line leverages JS magic 
 // BUT IT'S IDENTICAL TO THE ONE ABOVE
 
@@ -95,11 +96,7 @@ bookStore.inventory.forEach(bookObj => renderBook(bookObj))
 
 
 //! Pattern 1: create the function somewhere to promote reusability
-  // then pass the function as a callback to addEventListener
-
-//! Pattern 2: create the callback function in-place, make it anonymous, and 
-  // IF YOU WANT use an arrow function for readability.
-
+// then pass the function as a callback to addEventListener
 //! Attach click for toggle button
 const handleToggle = (e) => {
     e.target.nextElementSibling.classList.toggle("collapsed")
@@ -107,6 +104,14 @@ const handleToggle = (e) => {
 const toggleBtn = document.getElementById("toggleForm")
 const newBookForm = document.getElementById("book-form")
 toggleBtn.addEventListener("click", handleToggle)
+
+//! Pattern 2: create the callback function in-place, make it anonymous, and 
+// IF YOU WANT use an arrow function for readability.
+//! This is an alternative to attaching the click inside the renderBookAsHTML func
+document.querySelectorAll("li button").forEach(btn => {
+    console.log("hey")
+    btn.addEventListener("click", e => e.target.parentElement.remove())
+})
 
 //! Attach Submit onto the form
 const handleSubmit = (e) => {
