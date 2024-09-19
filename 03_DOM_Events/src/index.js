@@ -48,6 +48,8 @@ function renderBook(book) {
     img.alt = book.title
     const button = document.createElement("button")
     button.innerText = "Delete"
+    // button.addEventListener("click", (e) => e.target.parentElement.remove())
+    button.addEventListener("click", () => li.remove())
     li.append(h3, pAuthor, pPrice, img, button)
     // figure out where
     // target that place with querySelector/getElementById
@@ -58,19 +60,21 @@ function renderBook(book) {
 function renderBookAsHTML(book) {
     const ulList = document.getElementById("book-list")
     ulList.innerHTML += `
-    <li class="list-li">
-        <h3>${book.title}</h3>
-        <p>${book.author}</p>
-        <p>${formatPrice(book.price)}</p>
-        <img src=${book.imageUrl} alt=${book.title}/>
-        <button class="delete-btn">Delete</button>
-    </li>
+        <li class="list-li">
+            <h3>${book.title}</h3>
+            <p>${book.author}</p>
+            <p>${formatPrice(book.price)}</p>
+            <img src=${book.imageUrl} alt=${book.title}/>
+            <button data-id=${book.id} class="delete-btn">Delete</button>
+        </li>
     `
+    const deleteBtn = document.querySelector(`button[data-id='${book.id}']`)
+    deleteBtn.addEventListener("click", (e) => e.target.parentElement.remove())
 }
 
 setHeader()
 changeFooter()
-bookStore.inventory.forEach(bookObj => renderBookAsHTML(bookObj))
+bookStore.inventory.forEach(bookObj => renderBook(bookObj))
 // bookStore.inventory.forEach(renderBook) this line leverages JS magic 
 // BUT IT'S IDENTICAL TO THE ONE ABOVE
 
@@ -96,4 +100,42 @@ bookStore.inventory.forEach(bookObj => renderBookAsHTML(bookObj))
 //! Pattern 2: create the callback function in-place, make it anonymous, and 
   // IF YOU WANT use an arrow function for readability.
 
+//! Attach click for toggle button
+const handleToggle = (e) => {
+    e.target.nextElementSibling.classList.toggle("collapsed")
+}
+const toggleBtn = document.getElementById("toggleForm")
+const newBookForm = document.getElementById("book-form")
+toggleBtn.addEventListener("click", handleToggle)
 
+//! Attach Submit onto the form
+const handleSubmit = (e) => {
+    e.preventDefault() //! always the first thing you do in a submit callback
+    //! extract data out of the form
+    const title = document.querySelector("#form-title").value
+    const author = document.querySelector("#form-author").value
+    const price = document.querySelector("#form-price").value
+    const imageUrl = document.querySelector("#form-imageUrl").value
+    const inventory = document.querySelector("#form-inventory").value
+
+    //! validate the data
+    if (!title.trim() || !author.trim() || !price.trim()) {
+        alert("Please fill in all the required fields: title, author, price")
+        return
+    }
+    //! create an object containing the data
+    const newBook = {
+        title,
+        author,
+        price,
+        reviews: [],
+        inventory, 
+        imageUrl 
+    }
+    //! invoke renderBook with the newly created object
+    renderBook(newBook)
+
+    //! Reset the form on a successful submission
+    newBookForm.reset()
+}
+newBookForm.addEventListener("submit", handleSubmit)
