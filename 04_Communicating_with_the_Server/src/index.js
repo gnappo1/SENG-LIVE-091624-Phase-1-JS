@@ -135,3 +135,42 @@ bookForm.addEventListener('submit', handleSubmit)
 //! sure we still see the books and store details
 
 ////////////////////////////////////////////////////////////////
+// console.log("a")
+// const fetchBooks = () => {
+//     console.log("b")
+//     fetch("http://localhost:3000/books")
+//     .then(function(response) {
+//         console.log("c")
+//         return response.json()
+//     })
+//     .then(data => data.forEach(bookObj => renderBookAsHTML(bookObj)))
+//     .catch(error => alert(error))
+//     console.log("d")
+// }
+// console.log("a")
+
+const fetchJSON = (url, callbackFn) => {
+    return fetch(url)
+    .then(function (response) {
+        return response.json()
+    })
+    .then(callbackFn)
+    .catch(error => alert(error))
+}
+
+const fetchBooks = () => {
+    fetchJSON("http://localhost:3000/books", (data) => data.forEach(bookObj => renderBookAsHTML(bookObj)))
+    // .catch(error => alert(error))
+}
+fetchBooks()
+
+console.log("e")
+
+const fetchStoreData = () => {
+    fetchJSON("http://localhost:3000/stores/1", (storeData) => {
+        setHeader(storeData)
+        changeFooter(storeData)
+    })
+    // .catch(error => alert(error))
+}
+fetchStoreData()
