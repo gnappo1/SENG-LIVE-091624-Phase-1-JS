@@ -208,7 +208,7 @@ const handleSubmit = (e) => {
         price: e.target.price.valueAsNumber,
         inventory: e.target.inventory.valueAsNumber,
         imageUrl: e.target.imageUrl.value,
-        id: "a2s3" //! uuidv4()
+        id: uuidv4().slice(0, 4)
     }
     //! Pessimistic POST request
     // fetch("http://localhost:3000/books", {
