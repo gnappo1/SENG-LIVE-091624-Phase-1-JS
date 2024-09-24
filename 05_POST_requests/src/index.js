@@ -1,3 +1,5 @@
+// import { v4 as uuidv4 } from 'uuid';
+// console.log(uuidv4())
 //////////////////////////////////////////////////////////
 // Fetch Data & Call render functions to populate the DOM
 //////////////////////////////////////////////////////////
@@ -67,7 +69,8 @@ function renderBook(book) {
     
   const li = document.createElement('li');
   li.className = 'list-li';
-  
+  li.setAttribute("data-id", book.id)
+
   const h3 = document.createElement('h3');
   h3.textContent = book.title;
 
@@ -196,6 +199,7 @@ window.addEventListener('keydown', (e) => {
 // we can use a book as an argument for renderBook!  This will add the book's info to the webpage.
 const handleSubmit = (e) => {
     e.preventDefault()
+    console.log('hello')
     // how do I extract all of the info from the form -> e.target.NAMEATTRIBUTE.value
     // how do I build ONE object out of it
     const newBook = {
@@ -204,10 +208,43 @@ const handleSubmit = (e) => {
         price: e.target.price.valueAsNumber,
         inventory: e.target.inventory.valueAsNumber,
         imageUrl: e.target.imageUrl.value,
+        id: uuidv4().slice(0, 4)
     }
+    //! Pessimistic POST request
+    // fetch("http://localhost:3000/books", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify(newBook)
+    // })
+    // .then(response => response.json())
+    // .then(createdBook => renderBook(createdBook))
+
+    //! Optimistic update
+    fetch("http://localhost:3000/books", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(newBook)
+    })
+    .then(resp => {
+      if (resp.ok) {
+        e.target.reset() // EMPTY THE FORM
+      }
+    })
+    // .then(resp => {
+    //   if (!resp.ok) {
+    //     document.querySelector(`li[data-id='${newBook.id}']`).remove()
+    //   }
+    // })
+    .catch(err => {
+      renderError(err)
+      document.querySelector(`li[data-id='${newBook.id}']`).remove()
+    })
     // what do I do with the object
     renderBook(newBook)
-    e.target.reset() // EMPTY THE FORM
 }
 
 // bookForm.addEventListener('submit', e => handleSubmit(e, somethingElse))

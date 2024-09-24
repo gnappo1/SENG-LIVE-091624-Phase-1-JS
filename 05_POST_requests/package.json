@@ -1,0 +1,14 @@
+{
+  "name": "05_post_requests",
+  "version": "1.0.0",
+  "description": "- [ ] Observe how to send a POST request using HTML forms and JavaScript - [ ] Explain the difference between optimistic and pessimistic rendering",
+  "main": "index.js",
+  "dependencies": {
+    "uuid": "^10.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
