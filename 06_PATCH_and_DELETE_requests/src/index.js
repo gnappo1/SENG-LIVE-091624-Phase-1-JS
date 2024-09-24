@@ -1,3 +1,9 @@
+// import { v4 as uuidv4 } from 'uuid';
+// console.log(uuidv4())
+const toggleBookFormButton = document.querySelector('#toggleBookForm');
+const bookForm = document.querySelector('#book-form');
+const toggleStoreFormButton = document.querySelector('#toggleStoreForm');
+const storeForm = document.querySelector('#store-form');
 //////////////////////////////////////////////////////////
 // Fetch Data & Call render functions to populate the DOM
 //////////////////////////////////////////////////////////
@@ -64,19 +70,20 @@ function addSelectOptionForStore(store) {
 }
 
 function renderBook(book) {
-    
+
   const li = document.createElement('li');
   li.className = 'list-li';
-  
+  li.setAttribute("data-id", book.id)
+
   const h3 = document.createElement('h3');
   h3.textContent = book.title;
 
   const pAuthor = document.createElement('p');
   pAuthor.textContent = book.author;
-  
+
   const pPrice = document.createElement('p');
   pPrice.textContent = `${formatPrice(book.price)}`;
-  
+
   const pStock = document.createElement('p');
   pStock.className = "grey";
   if (book.inventory === 0) {
@@ -86,19 +93,55 @@ function renderBook(book) {
   } else {
     pStock.textContent = "In stock"
   }
-  
+
   const img = document.createElement('img');
   img.src = book.imageUrl;
   img.alt = `${book.title} cover`;
 
   const btn = document.createElement('button');
   btn.textContent = 'Delete';
+  btn.classList.add("delete")
 
-  btn.addEventListener('click', (e) => {
-    li.remove();
+  const editBtn = document.createElement('button');
+  editBtn.textContent = 'Edit';
+  editBtn.addEventListener("click", (e) => {
+    bookForm.classList.remove("collapsed")
+    //! example of targeting one input and filling it in with the corresponding info
+    // const formTitle = document.querySelector("#form-title")
+    // formTitle.value = book.title
+    fillIn(bookForm, book)
+    bookForm.querySelector("input[type='submit']").value = "UPDATE BOOK"
+    bookForm.dataset.id = book.id
   })
 
-  li.append(h3, pAuthor, pPrice, pStock, img, btn);
+  li.append(h3, pAuthor, pPrice, pStock, img, editBtn, btn);
+  btn.addEventListener('click', (e) => {
+    // PESSIMISTIC APPROACH
+  //   fetch(`http://localhost:3000/books/${book.id}`, {
+  //     method: "DELETE"
+  //   })
+  //   .then(res => {
+  //     if (res.ok) {
+  //       li.remove();
+  //     }
+  //   })
+  //   .catch(err => alert(err || "Could not process your request"))
+    //! OPTIMISTIC
+    fetch(`http://localhost:3000/books/${book.id}`, {
+      method: "DELETE"
+    })
+    .then(res => {
+      if (!res.ok) {
+        document.querySelector('#book-list').append(li);
+      }
+    })
+    .catch(err => {
+      alert(err || "Could not process your request")
+      document.querySelector('#book-list').append(li);
+    })
+    li.remove(); // sync code runs before async code
+  })
+
   document.querySelector('#book-list').append(li);
 }
 
@@ -130,7 +173,9 @@ function fillIn(form, data) {
     // in an object at variable keys, i.e. when
     // we don't know the key name up front.
     // In this case, it comes from an argument.
-    form[field].value = data[field]
+    if (form[field]) {
+      form[field].value = data[field]
+    }
   }
 }
 
@@ -140,10 +185,6 @@ function fillIn(form, data) {
 
 // UI Events
 ////////////////////////////////////////////////////////////////
-const toggleBookFormButton = document.querySelector('#toggleBookForm');
-const bookForm = document.querySelector('#book-form');
-const toggleStoreFormButton = document.querySelector('#toggleStoreForm');
-const storeForm = document.querySelector('#store-form');
 
 function toggleBookForm() {
   const bookFormHidden = bookForm.classList.toggle('collapsed');
@@ -195,19 +236,83 @@ window.addEventListener('keydown', (e) => {
 // }
 // we can use a book as an argument for renderBook!  This will add the book's info to the webpage.
 const handleSubmit = (e) => {
-    e.preventDefault()
-    // how do I extract all of the info from the form -> e.target.NAMEATTRIBUTE.value
-    // how do I build ONE object out of it
-    const newBook = {
-        title: e.target.title.value,
-        author: e.target.author.value,
-        price: e.target.price.valueAsNumber,
-        inventory: e.target.inventory.valueAsNumber,
-        imageUrl: e.target.imageUrl.value,
-    }
+  e.preventDefault()
+  // how do I extract all of the info from the form -> e.target.NAMEATTRIBUTE.value
+  // how do I build ONE object out of it
+  const bookId = parseInt(e.target.dataset.id)
+  
+  const book = {
+    title: e.target.title.value,
+    author: e.target.author.value,
+    price: e.target.price.valueAsNumber,
+    inventory: parseInt(e.target.inventory.value),
+    imageUrl: e.target.imageUrl.value,
+    id: bookId || uuidv4().slice(0, 4)
+  }
+
+  if (e.target.querySelector("input[type='submit']").value === "ADD BOOK") { //! the form is about POSTing
+    //! Pessimistic POST request
+    // fetch("http://localhost:3000/books", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify(book)
+    // })
+    // .then(response => response.json())
+    // .then(createdBook => renderBook(createdBook))
+  
+    //! Optimistic update
+    fetch("http://localhost:3000/books", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(book)
+    })
+    .then(resp => {
+      if (resp.ok) {
+        e.target.reset() // EMPTY THE FORM
+      }
+    })
+    .catch(err => {
+      renderError(err)
+      document.querySelector(`li[data-id='${book.id}']`).remove()
+    })
     // what do I do with the object
-    renderBook(newBook)
-    e.target.reset() // EMPTY THE FORM
+    renderBook(book)
+
+  } else { //! the form is about patching
+    fetch(`http://localhost:3000/books/${bookId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(book)
+    })
+    .then(response => response.json())
+    .then(updatedBook => {
+      const targetedLi = document.querySelector(`li[data-id='${updatedBook.id}']`)
+      targetedLi.querySelector("h3").innerText = updatedBook.title
+      targetedLi.querySelector("img").src = updatedBook.imageUrl
+      targetedLi.querySelector("p:nth-child(2)").innerText = updatedBook.author
+      targetedLi.querySelector("p:nth-child(3)").innerText = formatPrice(updatedBook.price)
+      const stockP = targetedLi.querySelector("p:nth-child(4)")
+      if (updatedBook.inventory === 0) {
+        stockP.textContent = "Out of stock";
+      } else if (updatedBook.inventory < 3) {
+        stockP.textContent = "Only a few left!";
+      } else {
+        stockP.textContent = "In stock"
+      }
+      e.target.reset()
+      e.target.querySelector("input[type='submit']").value = "ADD BOOK"
+      e.target.dataset.id = null
+      e.target.classList.add("collapsed")
+      //! target the outdated book from the dom using the data-id attribute
+      //! modify each node inside to reflect the new information
+    })
+  }
 }
 
 // bookForm.addEventListener('submit', e => handleSubmit(e, somethingElse))

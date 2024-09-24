@@ -68,6 +68,16 @@ main {
   font-size: large;
   font-weight: bold;
 }
+.list-li button.delete {
+  width: 190px;
+  margin: 15px 5px 15px 5px;
+  border: none;
+  background-color: red;
+  color: rgb(255, 255, 255);
+  padding: 3px;
+  font-size: large;
+  font-weight: bold;
+}
 
 #form-wrapper {
   border-top: solid;
